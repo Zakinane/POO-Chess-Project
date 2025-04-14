@@ -1,0 +1,55 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class ChessGUI {
+    - JPanel gui
+    - JButton[][] chessBoardSquares
+    - Image[][] chessPieceImages
+    - JPanel chessBoard
+    - JLabel message
+    - JButton creditsButton
+    + initializeGui()
+    + createImages()
+    + setupNewGame()
+    + getGui(): JComponent
+}
+
+class ChessBoard {
+    - JButton[][] squares
+    + getPreferredSize(): Dimension
+    + setupBoard()
+}
+
+class CreditsDialog {
+    + showCredits()
+}
+
+class ChessPiece {
+    - Image image
+    - int color
+    - int type
+    + getImage(): Image
+}
+
+enum PieceType {
+    QUEEN
+    KING
+    ROOK
+    KNIGHT
+    BISHOP
+    PAWN
+}
+
+enum PieceColor {
+    BLACK
+    WHITE
+}
+
+ChessGUI --> ChessBoard : uses
+ChessGUI --> CreditsDialog : opens
+ChessBoard --> ChessPiece : contains
+
+ChessPiece --> PieceType
+ChessPiece --> PieceColor
+
+@enduml
