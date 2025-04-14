@@ -3,7 +3,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.swing.border.*;
-import java.net.URL;
+import java.io.File;
 import javax.imageio.ImageIO;
 
 public class ChessGUI {
@@ -120,7 +120,7 @@ public class ChessGUI {
 
     private void createImages() {
         try {
-            BufferedImage bi = ImageIO.read(getClass().getResource("./chess.png"));
+            BufferedImage bi = ImageIO.read(new File("chess.png"));
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 6; j++) {
                     chessPieceImages[i][j] = bi.getSubimage(j * 64, i * 64, 64, 64);
