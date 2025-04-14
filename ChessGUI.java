@@ -1,9 +1,9 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import javax.swing.*;
 import javax.swing.border.*;
-import java.net.URL;
 import javax.imageio.ImageIO;
 
 public class ChessGUI {
@@ -31,7 +31,7 @@ public class ChessGUI {
         JToolBar tools = new JToolBar();
         gui.add(tools, BorderLayout.PAGE_START);
         JToggleButton modeToggle = new JToggleButton("Switch to Checkers");
-        modeToggle.addActionListener(_ -> {
+        modeToggle.addActionListener(e -> {
             isCheckersMode = !isCheckersMode;
             modeToggle.setText(isCheckersMode ? "Switch to Chess" : "Switch to Checkers");
             setupNewGame();
@@ -47,7 +47,7 @@ public class ChessGUI {
         tools.add(new JButton("Resign")); // add functionality!
         tools.add(creditsButton);
         tools.add(message);
-        creditsButton.addActionListener(_ -> {
+        creditsButton.addActionListener(e -> {
             // Créer une nouvelle fenêtre pour les crédits
             JFrame creditsFrame = new JFrame("Credits");
             creditsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -110,7 +110,7 @@ public class ChessGUI {
         } else {
             b.setBackground(Color.BLACK);
         }
-        b.addActionListener(_ -> handleSquareClick(i,j));
+        b.addActionListener(e -> handleSquareClick(i,j));
         return b;
     }
 
@@ -120,7 +120,7 @@ public class ChessGUI {
 
     private void createImages() {
         try {
-            BufferedImage bi = ImageIO.read(new URL("https://i.sstatic.net/memI0.png"));
+            BufferedImage bi = ImageIO.read(new File("chess.png"));
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 6; j++) {
                     chessPieceImages[i][j] = bi.getSubimage(j * 64, i * 64, 64, 64);
