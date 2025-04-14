@@ -3,7 +3,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.swing.border.*;
-import java.net.URL;
+import java.io.File;
 import javax.imageio.ImageIO;
 
 public class ChessGUI {
