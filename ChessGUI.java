@@ -1,9 +1,9 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import javax.swing.*;
 import javax.swing.border.*;
+import java.net.URL;
 import javax.imageio.ImageIO;
 
 public class ChessGUI {
@@ -31,7 +31,7 @@ public class ChessGUI {
         JToolBar tools = new JToolBar();
         gui.add(tools, BorderLayout.PAGE_START);
         JToggleButton modeToggle = new JToggleButton("Switch to Checkers");
-        modeToggle.addActionListener(e -> {
+        modeToggle.addActionListener(_ -> {
             isCheckersMode = !isCheckersMode;
             modeToggle.setText(isCheckersMode ? "Switch to Chess" : "Switch to Checkers");
             setupNewGame();
@@ -47,7 +47,7 @@ public class ChessGUI {
         tools.add(new JButton("Resign")); // add functionality!
         tools.add(creditsButton);
         tools.add(message);
-        creditsButton.addActionListener(e -> {
+        creditsButton.addActionListener(_ -> {
             // Créer une nouvelle fenêtre pour les crédits
             JFrame creditsFrame = new JFrame("Credits");
             creditsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -110,7 +110,7 @@ public class ChessGUI {
         } else {
             b.setBackground(Color.BLACK);
         }
-        b.addActionListener(e -> handleSquareClick(i,j));
+        b.addActionListener(_ -> handleSquareClick(i,j));
         return b;
     }
 
