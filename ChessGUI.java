@@ -1,26 +1,22 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.net.URL;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
+import java.net.URL;
+import javax.imageio.ImageIO;
 
 public class ChessGUI {
 
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
-    JButton creditsButton = new JButton("Credits");
-    private JButton[][] chessBoardSquares = new JButton[8][8];
-    private Image[][] chessPieceImages = new Image[2][6];
+    private final JButton[][] chessBoardSquares = new JButton[8][8];
+    private final Image[][] chessPieceImages = new Image[2][6];
     private JPanel chessBoard;
-    private final JLabel message = new JLabel(
-            "Good game!");
-    private static final String COLS = "ABCDEFGH";
-    public static final int QUEEN = 0, KING = 1,
-            ROOK = 2, KNIGHT = 3, BISHOP = 4, PAWN = 5;
-    public static final int[] STARTING_ROW = {
-            ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK
-    };
+    private final JButton creditsButton = new JButton("Credits");
+    private boolean isCheckersMode = false;
+    private static final char[] COLS = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
+    public static final int QUEEN = 0, KING = 1, ROOK = 2, KNIGHT = 3, BISHOP = 4, PAWN = 5;
+    public static final int[] STARTING_ROW = { ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK };
     public static final int BLACK = 0, WHITE = 1;
 
     ChessGUI() {
@@ -28,28 +24,25 @@ public class ChessGUI {
     }
 
     public final void initializeGui() {
-        // create the images for the chess pieces
         createImages();
-
-        // set up the main GUI
         gui.setBorder(new EmptyBorder(5, 5, 5, 5));
         JToolBar tools = new JToolBar();
-        tools.setFloatable(false);
         gui.add(tools, BorderLayout.PAGE_START);
+        JToggleButton modeToggle = new JToggleButton("Switch to Checkers");
+        modeToggle.addActionListener(e -> {
+            isCheckersMode = !isCheckersMode;
+            modeToggle.setText(isCheckersMode ? "Switch to Chess" : "Switch to Checkers");
+            setupNewGame();
+        });
         Action newGameAction = new AbstractAction("New") {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 setupNewGame();
             }
         };
+        tools.add(modeToggle);
         tools.add(newGameAction);
-        tools.add(new JButton("Save")); // TODO - add functionality!
-        tools.add(new JButton("Restore")); // TODO - add functionality!
-        tools.addSeparator();
-        tools.add(new JButton("Resign")); // TODO - add functionality!
-        tools.addSeparator();
-        tools.add(message);
+        tools.add(new JButton("Resign")); // add functionality!
         tools.add(creditsButton);
         creditsButton.addActionListener(new ActionListener() {
             @Override
@@ -57,174 +50,141 @@ public class ChessGUI {
                 // Créer une nouvelle fenêtre pour les crédits
                 JFrame creditsFrame = new JFrame("Credits");
                 creditsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                creditsFrame.setSize(300, 220);
+                creditsFrame.setSize(250, 190);
 
                 JPanel creditsPanel = new JPanel();
                 creditsPanel.setLayout(new BoxLayout(creditsPanel, BoxLayout.Y_AXIS));
 
-                creditsPanel.add(new JLabel("Made by:"));
-                creditsPanel.add(new JLabel("DJABA Zaki"));
-                creditsPanel.add(new JLabel("BOUAFIA Salah"));
-                creditsPanel.add(new JLabel("TALAMALI Mohamed Amir"));
-                creditsPanel.add(new JLabel("BENZETTA Sami"));
-                creditsPanel.add(new JLabel("OMEIRI Djasser"));
-                creditsPanel.add(new JLabel("OMEIRI Djasser"));
-                creditsPanel.add(new JLabel("OMEIRI Djasser"));
-                creditsPanel.add(new JLabel("BERDJANE Abderrahmane Mohamed"));
-                creditsPanel.add(new JLabel("BEGGAR Yacine"));
-                creditsPanel.add(new JLabel("ZERAOULIA Ahmed"));
+                creditsPanel.add(new JLabel("MADE BY:"));
+                creditsPanel.add(new JLabel("  DJABA Zaki"));
+                creditsPanel.add(new JLabel("  BOUAFIA Salah"));
+                creditsPanel.add(new JLabel("  TALAMALI Mohamed Amir"));
+                creditsPanel.add(new JLabel("  BENZETTA Sami"));
+                creditsPanel.add(new JLabel("  OMEIRI Djasser"));
+                creditsPanel.add(new JLabel("  BERDJANE Abderrahmane Mohamed"));
+                creditsPanel.add(new JLabel("  BEGGAR Yacine"));
+                creditsPanel.add(new JLabel("  ZERAOULIA Ahmed"));
                 creditsFrame.add(creditsPanel);
 
-                creditsFrame.setLocationRelativeTo(null);
                 creditsFrame.setVisible(true);
             }
         });
 
-        chessBoard = new JPanel(new GridLayout(0, 9)) {
-
-            @Override
-            public final Dimension getPreferredSize() {
-                Dimension d = super.getPreferredSize();
-                Dimension prefSize = null;
-                Component c = getParent();
-                if (c == null) {
-                    prefSize = new Dimension(
-                            (int) d.getWidth(), (int) d.getHeight());
-                } else if (c != null &&
-                        c.getWidth() > d.getWidth() &&
-                        c.getHeight() > d.getHeight()) {
-                    prefSize = c.getSize();
-                } else {
-                    prefSize = d;
-                }
-                int w = (int) prefSize.getWidth();
-                int h = (int) prefSize.getHeight();
-                // the smaller of the two sizes
-                int s = (w > h ? h : w);
-                return new Dimension(s, s);
-            }
-        };
+        chessBoard = new JPanel(new GridLayout(0, 9));
         chessBoard.setBorder(new CompoundBorder(
-                new EmptyBorder(8, 8, 8, 8),
-                new LineBorder(Color.BLACK)));
-        // Set the BG to be ochre
-        Color ochre = new Color(204, 119, 34);
-        chessBoard.setBackground(ochre);
+                new EmptyBorder(10,10,10,10),
+                new LineBorder(Color.BLACK)
+        ));
+        chessBoard.setPreferredSize(new Dimension(640, 640));
+        chessBoard.setBackground(Color.PINK);
         JPanel boardConstrain = new JPanel(new GridBagLayout());
-        boardConstrain.setBackground(ochre);
+        boardConstrain.setBackground(Color.PINK);
         boardConstrain.add(chessBoard);
         gui.add(boardConstrain);
 
-        // create the chess board squares
-        Insets buttonMargin = new Insets(0, 0, 0, 0);
-        for (int ii = 0; ii < chessBoardSquares.length; ii++) {
-            for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
-                JButton b = new JButton();
-                b.setMargin(buttonMargin);
-                // our chess pieces are 64x64 px in size, so we'll
-                // 'fill this in' using a transparent icon..
-                ImageIcon icon = new ImageIcon(
-                        new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
-                b.setIcon(icon);
-                if ((jj % 2 == 1 && ii % 2 == 1)
-                        // ) {
-                        || (jj % 2 == 0 && ii % 2 == 0)) {
-                    b.setBackground(Color.WHITE);
-                } else {
-                    b.setBackground(Color.BLACK);
-                }
-                chessBoardSquares[jj][ii] = b;
-            }
-        }
 
-        /*
-         * fill the chess board
-         */
-        chessBoard.add(new JLabel(""));
-        // fill the top row
-        for (int ii = 0; ii < 8; ii++) {
-            chessBoard.add(
-                    new JLabel(COLS.substring(ii, ii + 1),
-                            SwingConstants.CENTER));
-        }
-        // fill the black non-pawn piece row
-        for (int ii = 0; ii < 8; ii++) {
-            for (int jj = 0; jj < 8; jj++) {
-                switch (jj) {
-                    case 0:
-                        chessBoard.add(new JLabel("" + (9 - (ii + 1)),
-                                SwingConstants.CENTER));
-                    default:
-                        chessBoard.add(chessBoardSquares[jj][ii]);
-                }
+        Insets buttonMargin = new Insets(0, 0, 0, 0);
+        for (int i = 0; i < chessBoardSquares.length; i++) {
+            for (int j = 0; j < chessBoardSquares[i].length; j++) {
+                JButton b = getJButton(buttonMargin, j, i);
+                chessBoardSquares[j][i] = b;
             }
         }
+        chessBoard.add(new JLabel(""));
+        for (int i = 0; i < 8; i++) {
+            chessBoard.add(new JLabel(String.valueOf(COLS[i]), SwingConstants.CENTER));
+        }
+        for (int i = 7; i >= 0; i--) {
+            for (int j = 0; j < 8; j++) {
+                if (j == 0) {
+                    chessBoard.add(new JLabel("" + (i+1), SwingConstants.CENTER));
+                }
+                chessBoard.add(chessBoardSquares[j][i]);
+            }
+        }
+    }
+
+    private static JButton getJButton(Insets buttonMargin, int j, int i) {
+        JButton b = new JButton();
+        b.setMargin(buttonMargin);
+        ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
+        b.setIcon(icon);
+        if ((j % 2 == 1 && i % 2 == 1) || (j % 2 == 0 && i % 2 == 0)) {
+            b.setBackground(Color.WHITE);
+        } else {
+            b.setBackground(Color.BLACK);
+        }
+        return b;
     }
 
     public final JComponent getGui() {
         return gui;
     }
 
-    private final void createImages() {
+    private void createImages() {
         try {
             URL url = new URL("https://i.sstatic.net/memI0.png");
             BufferedImage bi = ImageIO.read(url);
-            for (int ii = 0; ii < 2; ii++) {
-                for (int jj = 0; jj < 6; jj++) {
-                    chessPieceImages[ii][jj] = bi.getSubimage(
-                            jj * 64, ii * 64, 64, 64);
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 6; j++) {
+                    chessPieceImages[i][j] = bi.getSubimage(j * 64, i * 64, 64, 64);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
             System.exit(1);
         }
     }
 
-    /**
-     * Initializes the icons of the initial chess board piece places
-     */
-    private final void setupNewGame() {
-        message.setText("Make your move!");
-        // set up the black pieces
-        for (int ii = 0; ii < STARTING_ROW.length; ii++) {
-            chessBoardSquares[ii][0].setIcon(new ImageIcon(
-                    chessPieceImages[BLACK][STARTING_ROW[ii]]));
+    private void setupNewGame() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                chessBoardSquares[i][j].setIcon(null);
+            }
         }
-        for (int ii = 0; ii < STARTING_ROW.length; ii++) {
-            chessBoardSquares[ii][1].setIcon(new ImageIcon(
-                    chessPieceImages[BLACK][PAWN]));
-        }
-        // set up the white pieces
-        for (int ii = 0; ii < STARTING_ROW.length; ii++) {
-            chessBoardSquares[ii][6].setIcon(new ImageIcon(
-                    chessPieceImages[WHITE][PAWN]));
-        }
-        for (int ii = 0; ii < STARTING_ROW.length; ii++) {
-            chessBoardSquares[ii][7].setIcon(new ImageIcon(
-                    chessPieceImages[WHITE][STARTING_ROW[ii]]));
+
+        if (isCheckersMode) {
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 8; col++) {
+                    if ((row + col) % 2 != 0) {
+                        chessBoardSquares[col][row].setText("⬤");
+                        chessBoardSquares[col][row].setForeground(Color.WHITE);
+                        chessBoardSquares[col][row].setHorizontalAlignment(SwingConstants.CENTER);
+                        chessBoardSquares[col][row].setFont(new Font("SansSerif", Font.BOLD, 36));
+                    }
+                }
+            }
+
+            for (int row = 5; row < 8; row++) {
+                for (int col = 0; col < 8; col++) {
+                    if ((row + col) % 2 != 0) {
+                        chessBoardSquares[col][row].setText("⬤");
+                        chessBoardSquares[col][row].setForeground(Color.RED);
+                        chessBoardSquares[col][row].setHorizontalAlignment(SwingConstants.CENTER);
+                        chessBoardSquares[col][row].setFont(new Font("SansSerif", Font.BOLD, 36));
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < STARTING_ROW.length; i++) {
+                chessBoardSquares[i][0].setIcon(new ImageIcon(chessPieceImages[BLACK][STARTING_ROW[i]]));
+                chessBoardSquares[i][1].setIcon(new ImageIcon(chessPieceImages[BLACK][PAWN]));
+                chessBoardSquares[i][6].setIcon(new ImageIcon(chessPieceImages[WHITE][PAWN]));
+                chessBoardSquares[i][7].setIcon(new ImageIcon(chessPieceImages[WHITE][STARTING_ROW[i]]));
+            }
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    chessBoardSquares[i][j].setText("");
+                }
+            }
         }
     }
 
     public static void main(String[] args) {
-        Runnable r = new Runnable() {
+        ChessGUI cg = new ChessGUI();
+        JFrame f = new JFrame("Board Champ");
 
-            @Override
-            public void run() {
-                ChessGUI cg = new ChessGUI();
-
-                JFrame f = new JFrame("Chess Game");
-                f.add(cg.getGui());
-                f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                f.setLocationByPlatform(true);
-
-                f.pack();
-
-                f.setMinimumSize(f.getSize());
-                f.setVisible(true);
-            }
-        };
-        SwingUtilities.invokeLater(r);
+        f.add(cg.getGui());
+        f.pack();
+        f.setVisible(true);
     }
-    
 }
