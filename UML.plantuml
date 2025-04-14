@@ -1,18 +1,32 @@
 @startuml
 skinparam classAttributeIconSize 0
 
+@startuml
+skinparam classAttributeIconSize 0
+
 class ChessGUI {
     - JPanel gui
     - JButton[][] chessBoardSquares
     - Image[][] chessPieceImages
     - JPanel chessBoard
-    - JLabel message
     - JButton creditsButton
-    + initializeGui()
-    + createImages()
-    + setupNewGame()
+    - JLabel message
+    - boolean isCheckersMode
+    - Point selectedSquare
+    - static final char[] COLS
+    - static final int QUEEN, KING, ROOK, KNIGHT, BISHOP, PAWN
+    - static final int[] STARTING_ROW
+    - static final int BLACK, WHITE
+
+    + ChessGUI()
+    + initializeGui(): void
     + getGui(): JComponent
+    + createImages(): void
+    + setupNewGame(): void
+    + handleSquareClick(int y, int x): void
+    + main(String[] args): static void
 }
+
 
 class ChessBoard {
     - JButton[][] squares
@@ -31,6 +45,16 @@ class ChessPiece {
     + getImage(): Image
 }
 
+class CheckerPiece {
+    - Color color
+    - boolean isKing
+
+    + CheckerPiece(Color color)
+    + makeKing(): void
+    + isKing(): boolean
+}
+
+
 enum PieceType {
     QUEEN
     KING
@@ -47,9 +71,14 @@ enum PieceColor {
 
 ChessGUI --> ChessBoard : uses
 ChessGUI --> CreditsDialog : opens
+ChessBoard --> "*" CheckerPiece : contains (in checkers mode)
 ChessBoard --> ChessPiece : contains
 
 ChessPiece --> PieceType
 ChessPiece --> PieceColor
+CheckerPiece --> PieceColor
+
+
+
 
 @enduml
