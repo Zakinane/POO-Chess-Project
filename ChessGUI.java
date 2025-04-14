@@ -13,7 +13,9 @@ public class ChessGUI {
     private final Image[][] chessPieceImages = new Image[2][6];
     private JPanel chessBoard;
     private final JButton creditsButton = new JButton("Credits");
+    private final JLabel message = new JLabel("Good game!");
     private boolean isCheckersMode = false;
+    private Point selectedSquare = null;
     private static final char[] COLS = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
     public static final int QUEEN = 0, KING = 1, ROOK = 2, KNIGHT = 3, BISHOP = 4, PAWN = 5;
     public static final int[] STARTING_ROW = { ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK };
@@ -29,7 +31,7 @@ public class ChessGUI {
         JToolBar tools = new JToolBar();
         gui.add(tools, BorderLayout.PAGE_START);
         JToggleButton modeToggle = new JToggleButton("Switch to Checkers");
-        modeToggle.addActionListener(e -> {
+        modeToggle.addActionListener(_ -> {
             isCheckersMode = !isCheckersMode;
             modeToggle.setText(isCheckersMode ? "Switch to Chess" : "Switch to Checkers");
             setupNewGame();
@@ -44,44 +46,38 @@ public class ChessGUI {
         tools.add(newGameAction);
         tools.add(new JButton("Resign")); // add functionality!
         tools.add(creditsButton);
-        creditsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Créer une nouvelle fenêtre pour les crédits
-                JFrame creditsFrame = new JFrame("Credits");
-                creditsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                creditsFrame.setSize(250, 190);
+        tools.add(message);
+        creditsButton.addActionListener(_ -> {
+            // Créer une nouvelle fenêtre pour les crédits
+            JFrame creditsFrame = new JFrame("Credits");
+            creditsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            creditsFrame.setSize(250, 190);
 
-                JPanel creditsPanel = new JPanel();
-                creditsPanel.setLayout(new BoxLayout(creditsPanel, BoxLayout.Y_AXIS));
+            JPanel creditsPanel = new JPanel();
+            creditsPanel.setLayout(new BoxLayout(creditsPanel, BoxLayout.Y_AXIS));
 
-                creditsPanel.add(new JLabel("MADE BY:"));
-                creditsPanel.add(new JLabel("  DJABA Zaki"));
-                creditsPanel.add(new JLabel("  BOUAFIA Salah"));
-                creditsPanel.add(new JLabel("  TALAMALI Mohamed Amir"));
-                creditsPanel.add(new JLabel("  BENZETTA Sami"));
-                creditsPanel.add(new JLabel("  OMEIRI Djasser"));
-                creditsPanel.add(new JLabel("  BERDJANE Abderrahmane Mohamed"));
-                creditsPanel.add(new JLabel("  BEGGAR Yacine"));
-                creditsPanel.add(new JLabel("  ZERAOULIA Ahmed"));
-                creditsFrame.add(creditsPanel);
+            creditsPanel.add(new JLabel("MADE BY:"));
+            creditsPanel.add(new JLabel("  DJABA Zaki"));
+            creditsPanel.add(new JLabel("  BOUAFIA Salah"));
+            creditsPanel.add(new JLabel("  TALAMALI Mohamed Amir"));
+            creditsPanel.add(new JLabel("  BENZETTA Sami"));
+            creditsPanel.add(new JLabel("  OMEIRI Djasser"));
+            creditsPanel.add(new JLabel("  BERDJANE Abderrahmane Mohamed"));
+            creditsPanel.add(new JLabel("  BEGGAR Yacine"));
+            creditsPanel.add(new JLabel("  ZERAOULIA Ahmed"));
+            creditsFrame.add(creditsPanel);
 
-                creditsFrame.setVisible(true);
-            }
+            creditsFrame.setVisible(true);
         });
 
         chessBoard = new JPanel(new GridLayout(0, 9));
-        chessBoard.setBorder(new CompoundBorder(
-                new EmptyBorder(10,10,10,10),
-                new LineBorder(Color.BLACK)
-        ));
+        chessBoard.setBorder(new CompoundBorder(new EmptyBorder(10,10,10,10), new LineBorder(Color.BLACK)));
         chessBoard.setPreferredSize(new Dimension(640, 640));
         chessBoard.setBackground(Color.PINK);
         JPanel boardConstrain = new JPanel(new GridBagLayout());
         boardConstrain.setBackground(Color.PINK);
         boardConstrain.add(chessBoard);
         gui.add(boardConstrain);
-
 
         Insets buttonMargin = new Insets(0, 0, 0, 0);
         for (int i = 0; i < chessBoardSquares.length; i++) {
@@ -104,7 +100,7 @@ public class ChessGUI {
         }
     }
 
-    private static JButton getJButton(Insets buttonMargin, int j, int i) {
+    private JButton getJButton(Insets buttonMargin, int j, int i) {
         JButton b = new JButton();
         b.setMargin(buttonMargin);
         ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
@@ -114,6 +110,7 @@ public class ChessGUI {
         } else {
             b.setBackground(Color.BLACK);
         }
+        b.addActionListener(_ -> handleSquareClick(i,j));
         return b;
     }
 
@@ -123,8 +120,7 @@ public class ChessGUI {
 
     private void createImages() {
         try {
-            URL url = new URL("https://i.sstatic.net/memI0.png");
-            BufferedImage bi = ImageIO.read(url);
+            BufferedImage bi = ImageIO.read(new URL("https://i.sstatic.net/memI0.png"));
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 6; j++) {
                     chessPieceImages[i][j] = bi.getSubimage(j * 64, i * 64, 64, 64);
@@ -176,6 +172,27 @@ public class ChessGUI {
                     chessBoardSquares[i][j].setText("");
                 }
             }
+        }
+    }
+
+    private void handleSquareClick(int y, int x) {
+        JButton clicked = chessBoardSquares[x][y];
+        Icon icon = clicked.getIcon();
+
+        if (selectedSquare == null) {
+            if (icon != null && !(icon instanceof ImageIcon && ((ImageIcon) icon).getImage() == null)) {
+                selectedSquare = new Point(x, y);
+                message.setText("Piece selected at " + (char) ('A' + x) + (8 - y));
+            }
+        } else {
+            JButton fromButton = chessBoardSquares[selectedSquare.x][selectedSquare.y];
+            Icon fromIcon = fromButton.getIcon();
+
+            clicked.setIcon(fromIcon);
+            fromButton.setIcon(new ImageIcon(
+                    new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB)));
+            selectedSquare = null;
+            message.setText("Piece moved.");
         }
     }
 
