@@ -1,0 +1,40 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class ChessGUI #LightBlue {
+    ..
+}
+
+class ChessBoard #LightGreen {
+    ..
+}
+
+class ChessPiece #LightYellow {
+    ..
+}
+
+class CheckerPiece #Wheat {
+    ..
+}
+
+class CreditsDialog #MistyRose {
+    ..
+}
+
+enum PieceType #LightGray {
+    ..
+}
+
+enum PieceColor #Thistle {
+    ..
+}
+
+ChessGUI "1" --> "1" ChessBoard
+ChessGUI "1" --> "0..1" CreditsDialog
+ChessBoard "1" --> "0..32" ChessPiece
+ChessBoard "1" --> "0..24" CheckerPiece
+ChessPiece "1" --> "1" PieceType
+ChessPiece "1" --> "1" PieceColor
+CheckerPiece "1" --> "1" PieceColor
+
+@enduml
