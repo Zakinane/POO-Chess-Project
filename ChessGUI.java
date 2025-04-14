@@ -36,7 +36,7 @@ public class ChessGUI {
             modeToggle.setText(isCheckersMode ? "Switch to Chess" : "Switch to Checkers");
             setupNewGame();
         });
-        Action newGameAction = new AbstractAction("New") {
+        Action newGameAction = new AbstractAction("New Board") {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setupNewGame();
