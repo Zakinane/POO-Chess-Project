@@ -13,7 +13,7 @@ public class ChessGUI {
     private final Image[][] chessPieceImages = new Image[2][6];
     private JPanel chessBoard;
     private final JButton creditsButton = new JButton("Credits");
-    private final JLabel message = new JLabel("Good game!");
+    private final JLabel message = new JLabel("Have Fun!");
     private boolean isCheckersMode = false;
     private Point selectedSquare = null;
     private static final char[] COLS = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
