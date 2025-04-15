@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -18,7 +17,7 @@ public class ChessBoardPanel extends JPanel {
     public ChessBoardPanel(JLabel messageLabel) {
         this.messageLabel = messageLabel;
         initializeChessBoard();
-        setupNewGame(false);
+        setupNewGame(false,false,false,false);
     }
 
     private void initializeChessBoard() {
@@ -66,11 +65,13 @@ public class ChessBoardPanel extends JPanel {
         return b;
     }
 
-    public void setupNewGame(boolean isCheckersMode) {
+    public void setupNewGame(boolean isChessMode,Boolean isCheckersMode, Boolean isBattleshipMode, Boolean isTicMode) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 chessBoardSquares[i][j].setIcon(null);
                 chessBoardSquares[i][j].setText("");
+                chessBoardSquares[i][j].setForeground(Color.RED);
+                chessBoardSquares[i][j].setFont(new Font("SansSerif", Font.PLAIN, 24));
             }
         }
 
@@ -96,13 +97,39 @@ public class ChessBoardPanel extends JPanel {
                     }
                 }
             }
-        } else {
+            isCheckersMode = false;
+        } else if (isChessMode) {
             for (int i = 0; i < STARTING_ROW.length; i++) {
-                chessBoardSquares[i][0].setIcon(new ImageIcon(PieceImages.chessPieceImages[BLACK][STARTING_ROW[i]]));
-                chessBoardSquares[i][1].setIcon(new ImageIcon(PieceImages.chessPieceImages[BLACK][PAWN]));
-                chessBoardSquares[i][6].setIcon(new ImageIcon(PieceImages.chessPieceImages[WHITE][PAWN]));
-                chessBoardSquares[i][7].setIcon(new ImageIcon(PieceImages.chessPieceImages[WHITE][STARTING_ROW[i]]));
+                PieceImages.loadImages();
+                Image[][] chessPieceImages = PieceImages.getChessPieceImages();
+                chessBoardSquares[i][0].setIcon(new ImageIcon(chessPieceImages[BLACK][STARTING_ROW[i]]));
+                chessBoardSquares[i][1].setIcon(new ImageIcon(chessPieceImages[BLACK][PAWN]));
+                chessBoardSquares[i][6].setIcon(new ImageIcon(chessPieceImages[WHITE][PAWN]));
+                chessBoardSquares[i][7].setIcon(new ImageIcon(chessPieceImages[WHITE][STARTING_ROW[i]]));
             }
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    chessBoardSquares[i][j].setText("");
+                }
+            }
+            isChessMode = false;
+        } else if (isBattleshipMode) {
+            for (int i = 0; i < STARTING_ROW.length; i++) {
+                for (int j = 0; j < STARTING_ROW.length; j++) {
+                    chessBoardSquares[i][j].setText("S");
+                }
+            }
+            isBattleshipMode = false;
+        } else if (isTicMode) {
+            chessBoardSquares[0][0].setText("O");
+            chessBoardSquares[0][1].setText("X");
+            chessBoardSquares[0][2].setText("O");
+            chessBoardSquares[1][0].setText("X");
+            chessBoardSquares[1][1].setText("O");
+            chessBoardSquares[1][2].setText("X");
+            chessBoardSquares[2][0].setText("X");
+            chessBoardSquares[2][2].setText("O");
+            isTicMode = false;
         }
         selectedSquare = null;
         messageLabel.setText("New game started!");
