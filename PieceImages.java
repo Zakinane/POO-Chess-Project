@@ -11,7 +11,7 @@ public class PieceImages {
 
     public static void loadImages() {
         try {
-            BufferedImage bi = ImageIO.read(new File("images/chess.png"));
+            BufferedImage bi = ImageIO.read(new File("chess.png"));
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 6; j++) {
                     chessPieceImages[i][j] = bi.getSubimage(j * 64, i * 64, 64, 64);
