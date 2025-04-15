@@ -8,7 +8,6 @@ public class ChessGUI {
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
     private final JButton creditsButton = new JButton("Credits");
     private final JLabel message = new JLabel("Have Fun!");
-    private boolean isCheckersMode = false;
     private ChessBoardPanel chessBoardPanel;
     private JFrame mainFrame;
 
@@ -23,21 +22,34 @@ public class ChessGUI {
         JToolBar tools = new JToolBar();
         gui.add(tools, BorderLayout.PAGE_START);
 
-        JToggleButton modeToggle = new JToggleButton("Switch to Checkers");
-        modeToggle.addActionListener(_ -> {
-            isCheckersMode = !isCheckersMode;
-            modeToggle.setText(isCheckersMode ? "Switch to Chess" : "Switch to Checkers");
-            chessBoardPanel.setupNewGame(isCheckersMode);
+        JToggleButton chessToggle = new JToggleButton("Chess");
+        JToggleButton checkersToggle = new JToggleButton("Checkers");
+        JToggleButton battleshipToggle = new JToggleButton("Battleship");
+        JToggleButton ticToggle = new JToggleButton("Tic-Tac-Toe");
+        chessToggle.addActionListener(_ -> {
+            chessBoardPanel.setupNewGame(true,false,false,false);
+        });
+        checkersToggle.addActionListener(_ -> {
+            chessBoardPanel.setupNewGame(false,true,false,false);
+        });
+        battleshipToggle.addActionListener(_ -> {
+            chessBoardPanel.setupNewGame(false,false,true,false);
+        });
+        ticToggle.addActionListener(_ -> {
+            chessBoardPanel.setupNewGame(false,false,false,true);
         });
 
         Action newGameAction = new AbstractAction("New Board") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                chessBoardPanel.setupNewGame(isCheckersMode);
+                chessBoardPanel.setupNewGame(false,false,false,false);
             }
         };
 
-        tools.add(modeToggle);
+        tools.add(chessToggle);
+        tools.add(checkersToggle);
+        tools.add(battleshipToggle);
+        tools.add(ticToggle);
         tools.add(newGameAction);
         tools.add(new JButton("Resign"));
         tools.add(creditsButton);
