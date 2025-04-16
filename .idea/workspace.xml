@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2341ed2-e788-49e6-bf55-0a99c3969d34" name="Changes" comment="new version">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,6 +46,7 @@
     "Application.ChessGUI.executor": "Run",
     "Application.Main.executor": "Run",
     "Application.ZakTest.executor": "Run",
+    "Application.java.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
@@ -62,10 +62,10 @@
   }
 }]]></component>
   <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-23" />
+    <configuration name="java" type="Application" factoryName="Application" activateToolWindowBeforeRun="false" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/.jdks/openjdk-23.0.1" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="Main" />
+      <option name="MAIN_CLASS_NAME" value="Main.java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -107,6 +107,9 @@
       <workItem from="1744730937944" duration="32000" />
       <workItem from="1744730973392" duration="63000" />
       <workItem from="1744731056197" duration="146000" />
+      <workItem from="1744731253659" duration="150000" />
+      <workItem from="1744732414200" duration="416000" />
+      <workItem from="1744805125817" duration="160000" />
     </task>
     <task id="LOCAL-00001" summary="new version">
       <option name="closed" value="true" />

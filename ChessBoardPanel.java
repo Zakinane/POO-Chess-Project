@@ -72,28 +72,33 @@ public class ChessBoardPanel extends JPanel {
                 chessBoardSquares[i][j].setText("");
                 chessBoardSquares[i][j].setForeground(Color.RED);
                 chessBoardSquares[i][j].setFont(new Font("SansSerif", Font.PLAIN, 24));
+                if ((i % 2 == 1 && j % 2 == 1) || (i % 2 == 0 && j % 2 == 0)) {
+                    chessBoardSquares[i][j].setBackground(Color.WHITE);
+                } else {
+                    chessBoardSquares[i][j].setBackground(Color.BLACK);
+                }
             }
         }
 
         if (isCheckersMode) {
-            for (int row = 0; row < 3; row++) {
-                for (int col = 0; col < 8; col++) {
-                    if ((row + col) % 2 != 0) {
-                        chessBoardSquares[col][row].setText("⬤");
-                        chessBoardSquares[col][row].setForeground(Color.WHITE);
-                        chessBoardSquares[col][row].setHorizontalAlignment(SwingConstants.CENTER);
-                        chessBoardSquares[col][row].setFont(new Font("SansSerif", Font.BOLD, 36));
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if ((i + j) % 2 != 0) {
+                        chessBoardSquares[j][i].setText("⬤");
+                        chessBoardSquares[j][i].setForeground(Color.WHITE);
+                        chessBoardSquares[j][i].setHorizontalAlignment(SwingConstants.CENTER);
+                        chessBoardSquares[j][i].setFont(new Font("SansSerif", Font.BOLD, 36));
                     }
                 }
             }
 
-            for (int row = 5; row < 8; row++) {
-                for (int col = 0; col < 8; col++) {
-                    if ((row + col) % 2 != 0) {
-                        chessBoardSquares[col][row].setText("⬤");
-                        chessBoardSquares[col][row].setForeground(Color.RED);
-                        chessBoardSquares[col][row].setHorizontalAlignment(SwingConstants.CENTER);
-                        chessBoardSquares[col][row].setFont(new Font("SansSerif", Font.BOLD, 36));
+            for (int i = 5; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if ((i + j) % 2 != 0) {
+                        chessBoardSquares[j][i].setText("⬤");
+                        chessBoardSquares[j][i].setForeground(Color.RED);
+                        chessBoardSquares[j][i].setHorizontalAlignment(SwingConstants.CENTER);
+                        chessBoardSquares[j][i].setFont(new Font("SansSerif", Font.BOLD, 36));
                     }
                 }
             }
@@ -114,11 +119,28 @@ public class ChessBoardPanel extends JPanel {
             }
             isChessMode = false;
         } else if (isBattleshipMode) {
-            for (int i = 0; i < STARTING_ROW.length; i++) {
-                for (int j = 0; j < STARTING_ROW.length; j++) {
-                    chessBoardSquares[i][j].setText("S");
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    chessBoardSquares[j][i].setBackground(Color.CYAN);
                 }
             }
+            PieceImages.loadImages();
+            Image[][] shipParts = PieceImages.getShipParts();
+            chessBoardSquares[0][0].setIcon(new ImageIcon(shipParts[0][0]));
+            chessBoardSquares[1][0].setIcon(new ImageIcon(shipParts[0][1]));
+            chessBoardSquares[2][0].setIcon(new ImageIcon(shipParts[0][2]));
+            chessBoardSquares[3][0].setIcon(new ImageIcon(shipParts[0][3]));
+            chessBoardSquares[4][0].setIcon(new ImageIcon(shipParts[0][4]));
+            chessBoardSquares[5][0].setIcon(new ImageIcon(shipParts[0][5]));
+            chessBoardSquares[0][1].setIcon(new ImageIcon(shipParts[1][0]));
+            chessBoardSquares[1][1].setIcon(new ImageIcon(shipParts[1][1]));
+            chessBoardSquares[2][1].setIcon(new ImageIcon(shipParts[1][2]));
+            chessBoardSquares[3][1].setIcon(new ImageIcon(shipParts[1][3]));
+            chessBoardSquares[0][2].setIcon(new ImageIcon(shipParts[2][0]));
+            chessBoardSquares[1][2].setIcon(new ImageIcon(shipParts[2][1]));
+            chessBoardSquares[2][2].setIcon(new ImageIcon(shipParts[2][2]));
+            chessBoardSquares[0][3].setIcon(new ImageIcon(shipParts[3][0]));
+            chessBoardSquares[1][3].setIcon(new ImageIcon(shipParts[3][1]));
             isBattleshipMode = false;
         } else if (isTicMode) {
             chessBoardSquares[0][0].setText("O");
