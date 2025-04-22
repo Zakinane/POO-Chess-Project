@@ -1,7 +1,13 @@
 @startuml
 skinparam classAttributeIconSize 0
 
+
+
 class ChessGUI #LightBlue {
+    ..
+}
+
+class CreditsDialog #MistyRose {
     ..
 }
 
@@ -17,10 +23,6 @@ class CheckerPiece #Wheat {
     ..
 }
 
-class CreditsDialog #MistyRose {
-    ..
-}
-
 enum PieceType #LightGray {
     ..
 }
@@ -29,12 +31,42 @@ enum PieceColor #Thistle {
     ..
 }
 
-ChessGUI "1" --> "1" ChessBoard
-ChessGUI "1" --> "0..1" CreditsDialog
-ChessBoard "1" --> "0..32" ChessPiece
-ChessBoard "1" --> "0..24" CheckerPiece
-ChessPiece "1" --> "1" PieceType
-ChessPiece "1" --> "1" PieceColor
-CheckerPiece "1" --> "1" PieceColor
+class BattleshipGame #lightskyblue {
+    ..
+}
 
+class Cell #LightYellow {
+    ..
+}
+
+class Ship #Coral {
+    ..
+}
+
+enum ShipType #LightPink {
+    ..
+}
+
+class TicTacToe #plum {
+    ..
+}
+
+class Cross_Circle #Brown {
+    ..
+}
+
+ChessGUI  <-- "opens" ChessBoard
+ChessGUI  <-- "opens"  CreditsDialog
+ChessGUI  <-- "opens"  BattleshipGame
+ChessGUI  <-- "opens"  TicTacToe
+ChessBoard "1" <-- "0..32" ChessPiece
+ChessBoard "1" <-- "0..24" CheckerPiece
+ChessPiece "1" -- "1" PieceType
+ChessPiece "1" -- "1" PieceColor
+CheckerPiece "1" -- "1" PieceColor
+BattleshipGame "1" <-- "100" Cell : playerBoard
+BattleshipGame  "1"  <-- "100" Cell : enemyBoard
+BattleshipGame "1" <-- "4" Ship
+Ship "1" -- "1" ShipType
+TicTacToe  <-- "moves" Cross_Circle
 @enduml
